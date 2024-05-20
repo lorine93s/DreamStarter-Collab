@@ -336,9 +336,9 @@ const Nav3: FC = () => {
         +suiBalance.totalBalance / 1_000_000_000
       );
     }
-    setBalances(prevBalances =>
-      new Map([...prevBalances, ...newBalances])
-    );
+    // setBalances(prevBalances =>
+    //   new Map([...prevBalances, ...newBalances])
+    // );
   }
 
   /* Session storage */

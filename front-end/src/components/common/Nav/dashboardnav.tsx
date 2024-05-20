@@ -325,9 +325,9 @@ const accounts = useRef<AccountData[]>(loadAccounts()); // useRef() instead of u
         +suiBalance.totalBalance / 1_000_000_000
       );
     }
-    setBalances(prevBalances =>
-      new Map([...prevBalances, ...newBalances])
-    );
+    // setBalances(prevBalances =>
+    //   new Map([...prevBalances, ...newBalances])
+    // );
   }
 
   /* Session storage */
