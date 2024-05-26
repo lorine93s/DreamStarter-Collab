@@ -25,7 +25,7 @@ const ConvertModal = () => {
         description: proposal.description,
         priceperNFT: proposal.priceperNFT,
         funding_goal: proposal.funding_goal,
-        stable_coin_option: "ETH",
+        stable_coin_option: "SUI",
         starting_date: "",
         ending_date: "",
       }
@@ -87,7 +87,7 @@ const ConvertModal = () => {
                     options={[
                       { value: "USDT", label: "USDT" },
                       { value: "USDC", label: "USDC" },
-                      { value: "ETH", label: "ETH" },
+                      { value: "SUI", label: "SUI" },
                     ]}
                   />
                 </div>

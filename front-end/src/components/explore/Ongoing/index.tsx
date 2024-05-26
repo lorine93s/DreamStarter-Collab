@@ -59,8 +59,8 @@ const Ongoing = () => {
           <div className="w-[500px] text-lg  border rounded-md py-10 px-10 max-w-xl flex flex-col gap-5 shadow border-gray-600 shadow-2xl mt-14" style={{background: "#0F4C81"}}>
             <div className="text-white text-2xl mb-1 font-semibold">{proposal.title}</div>
             <div className="text-white ">{proposal.description}</div>
-            <div className="text-white">Price Per NFT: {proposal.priceperNFT} ETH </div>
-            <div className="text-white">Funding Goal: {proposal.funding_goal} ETH</div>
+            <div className="text-white">Price Per NFT: {proposal.priceperNFT} SUI </div>
+            <div className="text-white">Funding Goal: {proposal.funding_goal} SUI</div>
             <div className="text-white">Valid Till: {proposal.date.$d.toDateString()}</div>
             <div className="text-white">Created by: {address}</div>
 

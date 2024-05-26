@@ -58,7 +58,7 @@ type AccountData = {
 
 
 const DashboardNav: FC = () => {
-  // const router = useRouter();
+
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -67,24 +67,8 @@ const DashboardNav: FC = () => {
     setAnchorElUser(null);
   };
 
-  // const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const path = event.target.value;
-  //   if (path) {
-  //     router.push(path);
-  //   }
-  // };
-
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-//   const navLinks = [
-//     {
-//       title: "Launch",
-//       subItems: [
-//         { title: "Create Proposal", path: "/launch/create-proposal" },
-//         { title: "Convert Proposal", path: "/launch/convert-proposal" },
-//       ],
-//     },
 
-//   ];
 
 const accounts = useRef<AccountData[]>(loadAccounts()); // useRef() instead of useState() because of setInterval()
   const [balances, setBalances] = useState<Map<string, number>>(new Map()); // Map<Sui address, SUI balance>
@@ -397,16 +381,7 @@ const accounts = useRef<AccountData[]>(loadAccounts()); // useRef() instead of u
         <a href="/dashboard/crowdfunding-events">Crowd funding events</a>
         <a href="/dashboard/started-events">Started Events</a>
         <a href="/dashboard/yourpoaps">Your poaps</a>
-        {/* <ConnectWallet
-          theme={lightTheme({
-            colors: { primaryButtonBg: "white" },
-          })}
-          style={{ color: "black", borderRadius: '9999px' }}
-          className="hover:bg-sky-500"
-          switchToActiveChain={true}
-          modalSize={"wide"}
-          welcomeScreen={{ title: "TokenFest" }}
-        /> */}
+
        
           {accounts.current.length > 0 ? ( 
             <div className='account'>
