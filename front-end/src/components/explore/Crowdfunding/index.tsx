@@ -424,10 +424,15 @@ const Crowdfunding = () => {
   /* Session storage */
 
   function saveSetupData(data: SetupData) {
-    sessionStorage.setItem(setupDataKey, JSON.stringify(data))
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(setupDataKey, JSON.stringify(data));
+    }
   }
-
+  
   function loadSetupData(): SetupData | null {
+    if (typeof sessionStorage === 'undefined') {
+      return null;
+    }
     const dataRaw = sessionStorage.getItem(setupDataKey);
     if (!dataRaw) {
       return null;
@@ -435,19 +440,26 @@ const Crowdfunding = () => {
     const data: SetupData = JSON.parse(dataRaw);
     return data;
   }
-
+  
   function clearSetupData(): void {
-    sessionStorage.removeItem(setupDataKey);
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem(setupDataKey);
+    }
   }
-
+  
   function saveAccount(account: AccountData): void {
     const newAccounts = [account, ...accounts.current];
-    sessionStorage.setItem(accountDataKey, JSON.stringify(newAccounts));
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(accountDataKey, JSON.stringify(newAccounts));
+    }
     accounts.current = newAccounts;
     fetchBalances([account]);
   }
-
+  
   function loadAccounts(): AccountData[] {
+    if (typeof sessionStorage === 'undefined') {
+      return [];
+    }
     const dataRaw = sessionStorage.getItem(accountDataKey);
     if (!dataRaw) {
       return [];
@@ -455,13 +467,14 @@ const Crowdfunding = () => {
     const data: AccountData[] = JSON.parse(dataRaw);
     return data;
   }
-
+  
   function clearState(): void {
-    sessionStorage.clear();
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.clear();
+    }
     accounts.current = [];
     setBalances(new Map());
   }
-
 
   const openIdProviders: OpenIdProvider[] = isLocalhost()
     ? ['Connect with Google']
