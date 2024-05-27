@@ -28,7 +28,6 @@ const google = process.env.NEXT_PUBLIC_GOOGLE;
 const salt = process.env.NEXT_PUBLIC_URL_SALT_SERVICE;
 
 
-
 const NETWORK: NetworkName = 'devnet';
 const MAX_EPOCH = 2; // keep ephemeral keys active for this many Sui epochs from now (1 epoch ~= 24h)
 
@@ -66,7 +65,7 @@ type AccountData = {
 
 
 export default function Home() {
-
+  const [OpenIdProviders, setOpenIdProviders] = useState<OpenIdProvider[]>(["Connect with Google"]);
   const accounts = useRef<AccountData[]>(loadAccounts()); // useRef() instead of useState() because of setInterval()
   const [balances, setBalances] = useState<Map<string, number>>(new Map()); // Map<Sui address, SUI balance>
   const [modalContent, setModalContent] = useState<string>('');
@@ -74,6 +73,7 @@ export default function Home() {
   useEffect(() => {
     completeZkLogin();
     fetchBalances(accounts.current);
+    setOpenIdProviders(OpenIdProviders);
     const interval = setInterval(() => fetchBalances(accounts.current), 5_000);
     return () => { clearInterval(interval) };
   }, []);
@@ -368,9 +368,9 @@ export default function Home() {
 
   /* HTML */
 
-  const openIdProviders: OpenIdProvider[] = isLocalhost()
-    ? ['Connect with Google']
-    : ['Connect with Google'];
+  // const openIdProviders: OpenIdProvider[] = isLocalhost()
+  //   ? ['Connect with Google']
+  //   : ['Connect with Google'];
 
   return (
 
@@ -400,7 +400,7 @@ export default function Home() {
             </div>
           ) : (
             // Render the connect buttons if no user address is present
-            openIdProviders.map(provider =>
+            OpenIdProviders.map(provider =>
               <button style={{ color: "black", borderRadius: '9999px', border: '1.5px solid black' }}
                 className="bg-white p-2  hover:bg-sky-500 {`btn-login ${provider}`}"
                 onClick={() => { beginZkLogin(provider); } }
@@ -469,7 +469,7 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            openIdProviders.map(provider =>
+            OpenIdProviders.map(provider =>
               <button style={{ color: "black", borderRadius: '9999px', border: '1.5px solid black' }}
                 className="bg-white p-2  hover:bg-sky-500 {`btn-login ${provider}`}"
                 onClick={() => { beginZkLogin(provider); } }
@@ -561,7 +561,7 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            openIdProviders.map(provider =>
+            OpenIdProviders.map(provider =>
               <button style={{ color: "black", borderRadius: '9999px', border: '1.5px solid black' }}
                 className="bg-white p-2  hover:bg-sky-500 {`btn-login ${provider}`}"
                 onClick={() => { beginZkLogin(provider); } }

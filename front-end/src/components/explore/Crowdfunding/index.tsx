@@ -59,6 +59,8 @@ type AccountData = {
 }
 
 const Crowdfunding = () => {
+  const [OpenIdProviders, setOpenIdProviders] = useState<OpenIdProvider[]>(["Connect with Google"]);
+
   const [mintingDone, setMintingDone] = useState<boolean>(false);
   const [isMinting, setIsMinting] = useState<boolean>(false);
   const [isStaked, setIsStaked] = useState<boolean>(false);
@@ -80,6 +82,8 @@ const Crowdfunding = () => {
   useEffect(() => {
     completeZkLogin();
     fetchBalances(accounts.current);
+    setOpenIdProviders(OpenIdProviders);
+
     const interval = setInterval(() => fetchBalances(accounts.current), 5_000);
     return () => { clearInterval(interval) };
   }, []);
@@ -476,9 +480,9 @@ const Crowdfunding = () => {
     setBalances(new Map());
   }
 
-  const openIdProviders: OpenIdProvider[] = isLocalhost()
-    ? ['Connect with Google']
-    : ['Connect with Google'];
+  // const openIdProviders: OpenIdProvider[] = isLocalhost()
+  //   ? ['Connect with Google']
+  //   : ['Connect with Google'];
   // --------------------------
   useEffect(() => {
     setIsLoading(false);

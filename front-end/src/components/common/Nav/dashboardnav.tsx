@@ -58,6 +58,7 @@ type AccountData = {
 
 
 const DashboardNav: FC = () => {
+  const [OpenIdProviders, setOpenIdProviders] = useState<OpenIdProvider[]>(["Connect with Google"]);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -77,6 +78,8 @@ const accounts = useRef<AccountData[]>(loadAccounts()); // useRef() instead of u
   useEffect(() => {
     completeZkLogin();
     fetchBalances(accounts.current);
+    setOpenIdProviders(OpenIdProviders);
+
     const interval = setInterval(() => fetchBalances(accounts.current), 5_000);
     return () => { clearInterval(interval) };
   }, []);
@@ -370,9 +373,9 @@ const accounts = useRef<AccountData[]>(loadAccounts()); // useRef() instead of u
   }
   /* HTML */
 
-  const openIdProviders: OpenIdProvider[] = isLocalhost()
-    ? ['Connect with Google']
-    : ['Connect with Google'];
+  // const openIdProviders: OpenIdProvider[] = isLocalhost()
+  //   ? ['Connect with Google']
+  //   : ['Connect with Google'];
   return (
     <div className="px-6 py-4 shadow-sm flex justify-between items-center"
       style={{ background: "#0F4C81" }}>
@@ -415,7 +418,7 @@ const accounts = useRef<AccountData[]>(loadAccounts()); // useRef() instead of u
             </div>
           ) : (
             // Render the connect buttons if no user address is present
-            openIdProviders.map(provider =>
+            OpenIdProviders.map(provider =>
               <button style={{ color: "black", borderRadius: '9999px', border: '1.5px solid black' }}
                 className="bg-white p-2  hover:bg-sky-500 {`btn-login ${provider}`}"
                 onClick={() => { beginZkLogin(provider); } }
