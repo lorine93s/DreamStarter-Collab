@@ -10,46 +10,6 @@ const Page = () => {
     const [claimed, setClaimed] = useState<boolean>(false);
     const [walletAddress, setWalletAddress] = useState<string>("");
 
-    useEffect(() => {
-        async function connectContract() {
-            try {
-                // Define the contract ABI
-                const contractABI = MyTokenABI;
-
-                // Define the contract address
-                const contractAddress = "YOUR_CONTRACT_ADDRESS";
-
-                // Setup a provider (Here, we're using a default provider for the Ethereum mainnet)
-                const provider = new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/YOUR_INFURA_API_KEY");
-
-                // Connect to the contract
-                const contract = new ethers.Contract(contractAddress, contractABI, provider);
-
-                setContract(contract);
-                console.log("Contract connected:", contract);
-            } catch (error) {
-                console.error("Failed to connect to the contract:", error);
-            }
-        }
-
-        connectContract();
-    }, []);
-
-    useEffect(() => {
-        async function getNetwork() {
-            try {
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const network = await provider.getNetwork();
-                setConnectedNetwork(network.chainId);
-            } catch (error) {
-                console.error("Error fetching network:", error);
-            }
-        }
-
-        if (window.ethereum) {
-            getNetwork();
-        }
-    }, []);
 
     const claimTokens = async () => {
         try {
