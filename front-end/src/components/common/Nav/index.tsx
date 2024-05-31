@@ -85,6 +85,7 @@ const Nav: FC = () => {
           </div>
         ))}
         <a href="/community/create-community">Community</a>
+        <a href="/swapusdc">Swap USDC</a>
         <a href="/dashboard/crowdfunding-events">Dashboard</a>
       </div>
     </div>
