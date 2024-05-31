@@ -9,7 +9,7 @@ import { enqueueSnackbar } from "notistack";
 import Nav3 from "@/components/common/Nav/nav3";
 
 import React, { FC } from "react";
-import { SuiClient, getFullnodeUrl } from '@mysten/sui.js/client';
+import { SuiClient, SuiObjectData, getFullnodeUrl } from '@mysten/sui.js/client';
 import { SerializedSignature, decodeSuiPrivateKey } from '@mysten/sui.js/cryptography';
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
@@ -24,13 +24,14 @@ import {
 import { NetworkName, makeExplorerUrl, requestSuiFromFaucet, shortenSuiAddress } from '@polymedia/suits';
 import { Modal, isLocalhost } from '@polymedia/webutils';
 import { jwtDecode } from 'jwt-decode';
+import { blockvision } from '@/utils/blockvision';
 
 const zk = process.env.NEXT_PUBLIC_URL_ZK_PROVER;
 const google = process.env.NEXT_PUBLIC_GOOGLE;
 const salt = process.env.NEXT_PUBLIC_URL_SALT_SERVICE;
 
 const NETWORK: NetworkName = 'devnet';
-const MAX_EPOCH = 2; 
+const MAX_EPOCH = 2;
 const suiClient = new SuiClient({
   url: getFullnodeUrl(NETWORK),
 });
@@ -60,6 +61,7 @@ type AccountData = {
 
 const Crowdfunding = () => {
   const [OpenIdProviders, setOpenIdProviders] = useState<OpenIdProvider[]>(["Connect with Google"]);
+  const [nftData, setNftData] = useState<SuiObjectData[]>([]);
 
   const [mintingDone, setMintingDone] = useState<boolean>(false);
   const [isMinting, setIsMinting] = useState<boolean>(false);
@@ -253,7 +255,7 @@ const Crowdfunding = () => {
     txb.moveCall({
       target: `${packageObjectId}::mynft::stake`,
       arguments: [
-        mintCoin, 
+        mintCoin,
         txb.pure("0x8601e94898753968ad5559c70076cd130e3b74267b2c5c97f7f3674907dfe5d7"),
       ],
     });
@@ -312,11 +314,11 @@ const Crowdfunding = () => {
       .finally(() => {
         setModalContent('');
       });
-      setStakingDone(true);
-      setIsStaked(true);
-      enqueueSnackbar(`Stake is successfully!`, {
-        variant: "success",
-      });
+    setStakingDone(true);
+    setIsStaked(true);
+    enqueueSnackbar(`Stake is successfully!`, {
+      variant: "success",
+    });
   }
   async function handleMint(account: AccountData) {
     setIsMinting(true);
@@ -391,10 +393,19 @@ const Crowdfunding = () => {
       .finally(() => {
         setModalContent('');
       });
-      setMintingDone(true);
-      enqueueSnackbar(`Token minted successfully!`, {
-        variant: "success",
-      });
+    setMintingDone(true);
+    enqueueSnackbar(`Token minted successfully!`, {
+      variant: "success",
+    });
+      (async () => {
+        const returnValue = await blockvision(account.userAddr);
+        const nftDataList = returnValue?.filter(
+          (data) =>
+            data?.content?.dataType === "moveObject" && data?.content?.type
+        );
+        setNftData(nftDataList);
+        console.log(nftDataList);
+      })();
   }
 
   /**
@@ -432,7 +443,7 @@ const Crowdfunding = () => {
       sessionStorage.setItem(setupDataKey, JSON.stringify(data));
     }
   }
-  
+
   function loadSetupData(): SetupData | null {
     if (typeof sessionStorage === 'undefined') {
       return null;
@@ -444,13 +455,13 @@ const Crowdfunding = () => {
     const data: SetupData = JSON.parse(dataRaw);
     return data;
   }
-  
+
   function clearSetupData(): void {
     if (typeof sessionStorage !== 'undefined') {
       sessionStorage.removeItem(setupDataKey);
     }
   }
-  
+
   function saveAccount(account: AccountData): void {
     const newAccounts = [account, ...accounts.current];
     if (typeof sessionStorage !== 'undefined') {
@@ -459,7 +470,7 @@ const Crowdfunding = () => {
     accounts.current = newAccounts;
     fetchBalances([account]);
   }
-  
+
   function loadAccounts(): AccountData[] {
     if (typeof sessionStorage === 'undefined') {
       return [];
@@ -471,7 +482,7 @@ const Crowdfunding = () => {
     const data: AccountData[] = JSON.parse(dataRaw);
     return data;
   }
-  
+
   function clearState(): void {
     if (typeof sessionStorage !== 'undefined') {
       sessionStorage.clear();
@@ -532,16 +543,16 @@ const Crowdfunding = () => {
               </div>
             ) : (
               <div className="mt-4">
-                 
+
                 {isStaked && accounts.current.map((acct) => (
                   <Button variant="primary" size="md" key={acct.userAddr} onClick={() => handleMint(acct)}
                     style={{ background: "white", color: "black", borderRadius: "999px" }}>
                     {isMinting ? "Minting..." : "Mint NFT"}
                   </Button>
-                
+
                 ))}
-              
-                {!isStaked && accounts.current.map((acct) =>  (
+
+                {!isStaked && accounts.current.map((acct) => (
                   <Button variant="primary" size="md" key={acct.userAddr} onClick={() => handleStake(acct)}
                     style={{ background: "white", color: "black", borderRadius: "999px" }}>
                     {isStaking ? "Staking..." : "Stake Token"}
